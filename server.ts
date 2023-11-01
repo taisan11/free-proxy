@@ -11,7 +11,7 @@ app.notFound((c) => {
 //   return c.html(`<p>hono-proxy</p>`)
 // })
 app.get('/', serveStatic({ path: './index.html' }))
-app.get('//access.js', serveStatic({ path: './access.js' }))
+// app.get('/access.js', serveStatic({ path: './access.js' }))
 app.get("/*", async (c) => {
     const url = c.req.path.substring(1, c.req.path.length);
     const headers = c.req.headers;
