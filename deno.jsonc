@@ -1,0 +1,6 @@
+{
+    "tasks": {
+        "run" : "deno run -A server.ts"
+    }
+  }
+  
