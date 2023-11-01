@@ -1,15 +1,17 @@
 import { Hono } from "https://deno.land/x/hono@v3.9.1/mod.ts";
-import { logger } from 'https://deno.land/x/hono@v3.9.1/middleware.ts'
+import { logger,serveStatic } from 'https://deno.land/x/hono@v3.9.1/middleware.ts'
 
 const app = new Hono();
 
 app.use('*', logger())
 app.notFound((c) => {
-    return c.text('404のっとふぁうんど', 404)
-  })  
-  app.get('/', (c) => {
-    return c.htpl(`The current router is ${app.routerName}`)
-  })
+  return c.text('404のっとふぁうんど', 404)
+})  
+// app.get('/', (c) => {
+//   return c.html(`<p>hono-proxy</p>`)
+// })
+app.get('/', serveStatic({ path: './index.html' }))
+app.get('//access.js', serveStatic({ path: './access.js' }))
 app.get("/*", async (c) => {
     const url = c.req.path.substring(1, c.req.path.length);
     const headers = c.req.headers;
