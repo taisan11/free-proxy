@@ -1,8 +1,8 @@
-import { Hono } from "https://deno.land/x/hono@v3.10.0-rc.2/mod.ts";
-import { logger,serveStatic } from 'https://deno.land/x/hono@v3.10.0-rc.2/middleware.ts'
+import { Hono } from "https://deno.land/x/hono@v3.9.2/mod.ts";
+import { logger,serveStatic } from 'https://deno.land/x/hono@v3.9.2/middleware.ts'
 
 const app = new Hono();
-
+// logと404
 app.use('*', logger())
 app.notFound((c) => {
   return c.text('404のっとふぁうんど', 404)
@@ -10,11 +10,13 @@ app.notFound((c) => {
 // app.get('/', (c) => {
 //   return c.html(`<p>hono-proxy</p>`)
 // })
+//メインページ
 app.get('/', serveStatic({ path: './index.html' }))
 // app.get('/access.js', serveStatic({ path: './access.js' }))
+// メイン処理
 app.get("/*", async (c) => {
-    const url = c.req.path.substring(1, c.req.path.length);
-    const headers = c.req.headers;
+    const url = c.req.path.substring(1, c.req.path.length); //urlの取得?
+    const headers = c.req.headers; // headerの取得
 
     let sendURL = "";
 
@@ -29,8 +31,8 @@ app.get("/*", async (c) => {
     sendHeaders.delete("x-real-ip")
     sendHeaders.delete("x-forwarded-for")
 
-    const resp = await fetch(sendURL, sendHeaders as any);
-
+    const resp = await fetch(sendURL, sendHeaders as any); // 取得したURLかあら取得
+    // ここをいじる
     if (resp.headers.get("Content-Type")?.includes("html")) {
         // url置き換え
         let html = await resp.text() + `
