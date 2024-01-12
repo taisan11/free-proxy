@@ -1,8 +1,8 @@
-import { Hono } from "https://deno.land/x/hono@v3.9.2/mod.ts";
+import { Hono } from "https://deno.land/x/hono@v3.12.2/mod.ts";
 import {
   logger,
   serveStatic,
-} from "https://deno.land/x/hono@v3.9.2/middleware.ts";
+} from "https://deno.land/x/hono@v3.12.2/middleware.ts";
 
 const app = new Hono();
 // logと404

@@ -1,3 +1,3 @@
-# hono-free-proxy
-
-Thanks EdamAme-x
+```
+deno run --allow-net hello.ts
+```
