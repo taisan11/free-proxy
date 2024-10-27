@@ -1,47 +1,60 @@
-import { Hono } from 'https://deno.land/x/hono@v3.12.2/mod.ts'
-import {
-    logger,
-    serveStatic,
-    cors
-  } from "https://deno.land/x/hono@v3.12.2/middleware.ts";
-
-import { HTMLRewriter } from "npm:html-rewriter-wasm";
+import { Hono } from 'hono'
+import { logger } from 'hono/logger'
+import { cors } from 'hono/cors'
+import {parseHost} from "ufo"
+import { HTMLRewriter } from 'html-rewriter-wasm'
 
 const app = new Hono()
 
-app.use("*", logger());
+app.use('*', logger())
 app.use('/api/*', cors())
 app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
+app.get("/manifest.json",(c)=>{return c.text("404",404)})
 
-app.get('/pages/*', async (c) => {
-    const OLD_URL = 'oldhost'
-    const NEW_URL = 'newhost'
-  
-    class AttributeRewriter {
-      constructor(attributeName) {
-        this.attributeName = attributeName
-      }
-      element(element) {
-        const attribute = element.getAttribute(this.attributeName)
-        if (attribute) {
-          element.setAttribute(this.attributeName,
-        attribute.replace(OLD_URL, NEW_URL))
-        }
-      }
-    }
-  
-    const rewriter = new HTMLRewriter().on('a', new AttributeRewriter('href'))
-  
-    const res = await fetch(c.req.raw)
-    const contentType = res.headers.get('Content-Type')
-  
-    if (contentType.startsWith('text/html')) {
-      return rewriter.transform(res)
-    } else {
-      return res
-    }
-})
+function addDefaultHost(url:string, defaultHost:string) {
+  try {
+    // URLオブジェクトを使って検証
+    const parsedUrl = new URL(url);
+    return parsedUrl.href;
+  } catch (e) {
+    // 無効なURLの場合、デフォルトのホストを追加
+    return `${defaultHost}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+}
+
+app.get('/*', async (c) => {
+  // 新しいリクエストを作成してfetch
+  const request = new Request(c.req.path.slice(1), {
+    method: c.req.raw.method,
+    headers: c.req.raw.headers,
+    body: c.req.raw.body,
+  });
+  const res = await fetch(request);
+  const decoder = new TextDecoder();
+
+  let output = await res.text();
+  const rewriter = new HTMLRewriter((outputChunk) => {
+    output += decoder.decode(outputChunk);
+  });
+  rewriter.on("a",{
+    element(element) {
+      const old = element.getAttribute("href") || "#";
+      const host = parseHost(c.req.path.slice(1));
+      console.log(host);
+      const newUrl = new URL(old, addDefaultHost(old, host.hostname+":"+host.port)).toString();
+      element.setAttribute("href", newUrl);
+    },
+
+  })
+  try {
+    await rewriter.end();
+  } finally {
+    rewriter.free(); // Remember to free memory
+  }
+  return c.html(output);
+});
+
 
 Deno.serve(app.fetch)

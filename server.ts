@@ -1,8 +1,6 @@
-import { Hono } from "https://deno.land/x/hono@v3.12.2/mod.ts";
-import {
-  logger,
-  serveStatic,
-} from "https://deno.land/x/hono@v3.12.2/middleware.ts";
+import { Hono } from "hono";
+import {logger} from "hono/logger";
+import {serveStatic} from "hono/deno";
 
 const app = new Hono();
 // logと404
@@ -19,7 +17,7 @@ app.get("/", serveStatic({ path: "./index.html" }));
 // メイン処理
 app.get("/*", async (c) => {
   const url = c.req.path.substring(1, c.req.path.length); //urlの取得?
-  const headers = c.req.headers; // headerの取得
+  const headers = c.req.raw.headers; // headerの取得
 
   let sendURL = "";
 

@@ -1,5 +1,10 @@
 {
   "tasks": {
     "run": "deno run -A server.ts"
+  },
+  "imports": {
+    "hono":"jsr:@hono/hono",
+    "html-rewriter-wasm":"npm:html-rewriter-wasm",
+    "ufo":"npm:ufo"
   }
 }
