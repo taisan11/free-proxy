@@ -41,7 +41,7 @@ app.get('/*', async (c) => {
       if (old.startsWith("http://")||old.startsWith("https://")) {
         newURL = baseUrl+"/"+old;
       } else {
-        newURL = baseUrl+"/"+new URL(old, c.req.path.slice(1)).origin;
+        newURL = baseUrl+"/"+new URL(old, c.req.path.slice(1)).href;
       }
       element.removeAttribute("href");
       element.setAttribute("href", newURL);
@@ -54,7 +54,7 @@ app.get('/*', async (c) => {
       if (old.startsWith("http://")||old.startsWith("https://")) {
         newURL = baseUrl+"/"+old;
       } else {
-        newURL = baseUrl+"/"+new URL(old, c.req.path.slice(1)).origin;
+        newURL = baseUrl+"/"+new URL(old, c.req.path.slice(1)).href;
       }
       element.removeAttribute("src");
       element.setAttribute("src", newURL);
@@ -67,7 +67,7 @@ app.get('/*', async (c) => {
       if (old.startsWith("http://")||old.startsWith("https://")) {
         newURL = baseUrl+"/"+old;
       } else {
-        newURL = baseUrl+"/"+new URL(old, c.req.path.slice(1)).origin;
+        newURL = baseUrl+"/"+new URL(old, c.req.path.slice(1)).href;
       }
       element.removeAttribute("href");
       element.setAttribute("href", newURL);
@@ -80,7 +80,7 @@ app.get('/*', async (c) => {
       if (old.startsWith("http://")||old.startsWith("https://")) {
         newURL = baseUrl+"/"+old;
       } else {
-        newURL = baseUrl+"/"+new URL(old, c.req.path.slice(1)).origin;
+        newURL = baseUrl+"/"+new URL(old, c.req.path.slice(1)).href;
       }
       element.removeAttribute("src");
       element.setAttribute("src", newURL);
