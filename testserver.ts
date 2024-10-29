@@ -1,12 +1,11 @@
 import { Hono } from 'hono'
 import { logger } from 'hono/logger'
 import { cors } from 'hono/cors'
-import {cleanDoubleSlashes} from "ufo"
 import { HTMLRewriter } from 'html-rewriter-wasm'
 
 const app = new Hono()
 
-const baseUrl = "http://localhost:8000"
+const baseUrl =  Deno.env.get("BASE_URL")||"http://localhost:8000"
 
 app.use('*', logger())
 app.use('/api/*', cors())
@@ -14,17 +13,6 @@ app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 app.get("/manifest.json",(c)=>{return c.text("404",404)})
-
-function addDefaultHost(url:string, defaultHost:string) {
-  try {
-    // URLオブジェクトを使って検証
-    const parsedUrl = new URL(url);
-    return parsedUrl.href;
-  } catch (e) {
-    // 無効なURLの場合、デフォルトのホストを追加
-    return `${defaultHost}${url.startsWith('/') ? '' : '/'}${url}`;
-  }
-}
 
 app.get('/*', async (c) => {
   // 新しいリクエストを作成してfetch
