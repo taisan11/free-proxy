@@ -37,7 +37,7 @@ app.get('/*', async (c) => {
   rewriter.on("a",{
     element(element) {
       let newURL ="";
-      let old = element.getAttribute("href") || "#";
+      const old = element.getAttribute("href") || "#";
       if (old.startsWith("http://")||old.startsWith("https://")) {
         newURL = baseUrl+"/"+old;
       } else {
@@ -50,7 +50,7 @@ app.get('/*', async (c) => {
   .on("img",{
     element(element) {
       let newURL ="";
-      let old = element.getAttribute("src") || "#";
+      const old = element.getAttribute("src") || "#";
       if (old.startsWith("http://")||old.startsWith("https://")) {
         newURL = baseUrl+"/"+old;
       } else {
@@ -63,7 +63,7 @@ app.get('/*', async (c) => {
   .on("link",{
     element(element) {
       let newURL ="";
-      let old = element.getAttribute("href") || "#";
+      const old = element.getAttribute("href") || "#";
       if (old.startsWith("http://")||old.startsWith("https://")) {
         newURL = baseUrl+"/"+old;
       } else {
@@ -76,7 +76,7 @@ app.get('/*', async (c) => {
   .on("script",{
     element(element) {
       let newURL ="";
-      let old = element.getAttribute("src") || "#";
+      const old = element.getAttribute("src") || "#";
       if (old.startsWith("http://")||old.startsWith("https://")) {
         newURL = baseUrl+"/"+old;
       } else {
